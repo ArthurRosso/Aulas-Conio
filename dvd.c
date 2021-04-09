@@ -20,6 +20,9 @@ typedef struct {
 } DVD;
 
 typedef struct {
+    char tela[LARGURA_TELA][ALTURA_TELA];
+    char tela_anterior[LARGURA_TELA][ALTURA_TELA];
+
     DVD dvd;
 } Jogo;
 
@@ -50,12 +53,21 @@ float CalculaDeltaT() {
 }
 
 Jogo InicializaJogo() {
+    int x, y;
     Jogo j;
+
     j.dvd.pos.x=0;
     j.dvd.pos.y=0;
     j.dvd.velX=1;
     j.dvd.velY=1;
     j.dvd.timer=0;
+
+    for(x=0; x < LARGURA_TELA; x++) {
+        for(y=0; y < ALTURA_TELA; y++) {
+            j.tela[x][y]=' ';
+            j.tela_anterior[x][y]=' ';
+        }
+    }
 
     return j;
 }
@@ -69,15 +81,15 @@ void AtualizaJogo(Jogo* j, float deltaT) {
         j->dvd.timer-=0.1;
 
 
-        if (j->dvd.pos.x >= LARGURA_TELA) {
+        if (j->dvd.pos.x >= LARGURA_TELA-2) {
             j->dvd.velX *= -1;
             j->dvd.pos.x = LARGURA_TELA-3;
 
         }
 
-        if (j->dvd.pos.y > ALTURA_TELA) {
+        if (j->dvd.pos.y >= ALTURA_TELA) {
             j->dvd.velY *= -1;
-            j->dvd.pos.y = ALTURA_TELA-1;
+            j->dvd.pos.y = ALTURA_TELA-2;
         }
 
         if (j->dvd.pos.x <= 0) {
@@ -92,11 +104,25 @@ void AtualizaJogo(Jogo* j, float deltaT) {
     }
 }
 void DesenhaJogo(Jogo* j) {
-    clrscr();
+    int x, y;
 
-    cputsxy(
-        j->dvd.pos.x,
-        j->dvd.pos.y,
-        "DVD"
-    );
+    for(x=0; x < LARGURA_TELA; x++) {
+        for(y=0; y < ALTURA_TELA; y++) {
+            j->tela[x][y]=' ';
+        }
+    }
+
+    j->tela[j->dvd.pos.x][j->dvd.pos.y]='D';
+    j->tela[j->dvd.pos.x + 1][j->dvd.pos.y]='V';
+    j->tela[j->dvd.pos.x + 2][j->dvd.pos.y]='D';
+
+     for(x=0; x < LARGURA_TELA; x++) {
+        for(y=0; y < ALTURA_TELA; y++) {
+            if(j->tela[x][y] != j->tela_anterior[x][y]) {
+                putchxy(x+1, y+1, j->tela[x][y]);
+            }
+            j->tela_anterior[x][y]=j->tela[x][y];
+        }
+    }
+
 }
