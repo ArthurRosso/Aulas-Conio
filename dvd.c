@@ -56,8 +56,8 @@ Jogo InicializaJogo() {
     int x, y;
     Jogo j;
 
-    j.dvd.pos.x=0;
-    j.dvd.pos.y=0;
+    j.dvd.pos.x=5;
+    j.dvd.pos.y=5;
     j.dvd.velX=1;
     j.dvd.velY=1;
     j.dvd.timer=0;
@@ -81,25 +81,25 @@ void AtualizaJogo(Jogo* j, float deltaT) {
         j->dvd.timer-=0.1;
 
 
-        if (j->dvd.pos.x >= LARGURA_TELA-2) {
+        if (j->dvd.pos.x >= LARGURA_TELA-3) {
             j->dvd.velX *= -1;
-            j->dvd.pos.x = LARGURA_TELA-3;
+            j->dvd.pos.x = LARGURA_TELA-5;
 
         }
 
-        if (j->dvd.pos.y >= ALTURA_TELA) {
+        if (j->dvd.pos.y >= ALTURA_TELA-1) {
             j->dvd.velY *= -1;
-            j->dvd.pos.y = ALTURA_TELA-2;
+            j->dvd.pos.y = ALTURA_TELA-3;
         }
 
-        if (j->dvd.pos.x <= 0) {
+        if (j->dvd.pos.x <= 1) {
             j->dvd.velX *= -1;
-            j->dvd.pos.x = 0;
+            j->dvd.pos.x = 1;
         }
 
-        if (j->dvd.pos.y <= 0) {
+        if (j->dvd.pos.y <= 1) {
             j->dvd.velY *= -1;
-            j->dvd.pos.y = 0;
+            j->dvd.pos.y = 1;
         }
     }
 }
@@ -110,6 +110,15 @@ void DesenhaJogo(Jogo* j) {
         for(y=0; y < ALTURA_TELA; y++) {
             j->tela[x][y]=' ';
         }
+    }
+
+    for(x=0; x < LARGURA_TELA; x++){
+        j->tela[x][0]='#';
+        j->tela[x][ALTURA_TELA-1]='#';
+    }
+    for(y=0; y < ALTURA_TELA; y++) {
+        j->tela[0][y]='#';
+        j->tela[LARGURA_TELA-1][y]='#';
     }
 
     j->tela[j->dvd.pos.x][j->dvd.pos.y]='D';
