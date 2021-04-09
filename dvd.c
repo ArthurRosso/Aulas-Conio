@@ -63,5 +63,11 @@ void AtualizaJogo(Jogo* j, float deltaT){
     }
 }
 void DesenhaJogo(Jogo* j){
-    printf("\r%d, %d, %f", j->dvd.pos.x, j->dvd.pos.y, j->dvd.timer);
+    clrscr();
+
+    cputsxy(
+        j->dvd.pos.x,
+        j->dvd.pos.y,
+        "DVD"
+    );
 }
