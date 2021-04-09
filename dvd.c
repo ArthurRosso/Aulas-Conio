@@ -1,10 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <conio2.h>
 
 typedef struct {
+    int x;
+    int y;
+} Posicao;
 
+typedef struct {
+    Posicao pos;
+    float timer;
+} DVD;
+
+typedef struct {
+    DVD dvd;
 } Jogo;
 
 Jogo InicializaJogo();
@@ -34,9 +45,23 @@ float CalculaDeltaT() {
 }
 
 Jogo InicializaJogo(){
+    Jogo j;
+    j.dvd.pos.x=0;
+    j.dvd.pos.y=0;
+    j.dvd.timer=0;
+
+    return j;
 }
 
 void AtualizaJogo(Jogo* j, float deltaT){
+    j->dvd.timer+=deltaT;
+
+    if(j->dvd.timer>=1){
+        j->dvd.pos.x++;
+        j->dvd.pos.y++;
+        j->dvd.timer-=1;
+    }
 }
 void DesenhaJogo(Jogo* j){
+    printf("\r%d, %d, %f", j->dvd.pos.x, j->dvd.pos.y, j->dvd.timer);
 }
