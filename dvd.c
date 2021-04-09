@@ -8,6 +8,11 @@
 #define ALTURA_TELA 30
 
 typedef struct {
+    char c;
+    int cor;
+} Pixel;
+
+typedef struct {
     int x;
     int y;
 } Posicao;
@@ -20,8 +25,8 @@ typedef struct {
 } DVD;
 
 typedef struct {
-    char tela[LARGURA_TELA][ALTURA_TELA];
-    char tela_anterior[LARGURA_TELA][ALTURA_TELA];
+    Pixel tela[LARGURA_TELA][ALTURA_TELA];
+    Pixel tela_anterior[LARGURA_TELA][ALTURA_TELA];
 
     DVD dvd;
 } Jogo;
@@ -64,8 +69,8 @@ Jogo InicializaJogo() {
 
     for(x=0; x < LARGURA_TELA; x++) {
         for(y=0; y < ALTURA_TELA; y++) {
-            j.tela[x][y]=' ';
-            j.tela_anterior[x][y]=' ';
+            j.tela[x][y]=(Pixel) {' ', WHITE};
+            j.tela_anterior[x][y]=(Pixel) {' ', WHITE};
         }
     }
 
@@ -108,27 +113,28 @@ void DesenhaJogo(Jogo* j) {
 
     for(x=0; x < LARGURA_TELA; x++) {
         for(y=0; y < ALTURA_TELA; y++) {
-            j->tela[x][y]=' ';
+            j->tela[x][y]=(Pixel) {' ', WHITE};
         }
     }
 
     for(x=0; x < LARGURA_TELA; x++){
-        j->tela[x][0]='#';
-        j->tela[x][ALTURA_TELA-1]='#';
+        j->tela[x][0]=(Pixel) {'#', LIGHTGRAY};
+        j->tela[x][ALTURA_TELA-1]=(Pixel) {'#', LIGHTGRAY};
     }
     for(y=0; y < ALTURA_TELA; y++) {
-        j->tela[0][y]='#';
-        j->tela[LARGURA_TELA-1][y]='#';
+        j->tela[0][y]=(Pixel) {'#', LIGHTGRAY};
+        j->tela[LARGURA_TELA-1][y]=(Pixel) {'#', LIGHTGRAY};
     }
 
-    j->tela[j->dvd.pos.x][j->dvd.pos.y]='D';
-    j->tela[j->dvd.pos.x + 1][j->dvd.pos.y]='V';
-    j->tela[j->dvd.pos.x + 2][j->dvd.pos.y]='D';
+    j->tela[j->dvd.pos.x][j->dvd.pos.y]=(Pixel) {'D', LIGHTBLUE};
+    j->tela[j->dvd.pos.x + 1][j->dvd.pos.y]=(Pixel) {'V', LIGHTBLUE};
+    j->tela[j->dvd.pos.x + 2][j->dvd.pos.y]=(Pixel) {'D', LIGHTBLUE};
 
      for(x=0; x < LARGURA_TELA; x++) {
         for(y=0; y < ALTURA_TELA; y++) {
-            if(j->tela[x][y] != j->tela_anterior[x][y]) {
-                putchxy(x+1, y+1, j->tela[x][y]);
+            if(j->tela[x][y].c != j->tela_anterior[x][y].c || j->tela[x][y].cor != j->tela_anterior[x][y].cor) {
+                textcolor(j->tela[x][y].cor);
+                putchxy(x+1, y+1, j->tela[x][y].c);
             }
             j->tela_anterior[x][y]=j->tela[x][y];
         }
