@@ -20,8 +20,11 @@ typedef struct {
 typedef struct {
     Posicao pos;
     float timer;
+
     int velX;
     int velY;
+
+    int color;
 } DVD;
 
 typedef struct {
@@ -38,6 +41,7 @@ float CalculaDeltaT();
 
 
 int main() {
+    srand(time(NULL));
     Jogo j = InicializaJogo();
 
     while (1) {
@@ -67,6 +71,8 @@ Jogo InicializaJogo() {
     j.dvd.velY=1;
     j.dvd.timer=0;
 
+    j.dvd.color=WHITE;
+
     for(x=0; x < LARGURA_TELA; x++) {
         for(y=0; y < ALTURA_TELA; y++) {
             j.tela[x][y]=(Pixel) {' ', WHITE};
@@ -79,6 +85,9 @@ Jogo InicializaJogo() {
 
 void AtualizaJogo(Jogo* j, float deltaT) {
     j->dvd.timer+=deltaT;
+    int cores[] = {WHITE, BLUE, RED, CYAN, GREEN, MAGENTA, YELLOW, BROWN};
+
+    int corSorteada=cores[rand() % 8];
 
     if(j->dvd.timer>=0.1) {
         j->dvd.pos.x += j->dvd.velX;
@@ -89,22 +98,25 @@ void AtualizaJogo(Jogo* j, float deltaT) {
         if (j->dvd.pos.x >= LARGURA_TELA-3) {
             j->dvd.velX *= -1;
             j->dvd.pos.x = LARGURA_TELA-5;
-
+            j->dvd.color = corSorteada;
         }
 
         if (j->dvd.pos.y >= ALTURA_TELA-1) {
             j->dvd.velY *= -1;
             j->dvd.pos.y = ALTURA_TELA-3;
+            j->dvd.color = corSorteada;
         }
 
         if (j->dvd.pos.x <= 1) {
             j->dvd.velX *= -1;
             j->dvd.pos.x = 1;
+            j->dvd.color = corSorteada;
         }
 
         if (j->dvd.pos.y <= 1) {
             j->dvd.velY *= -1;
             j->dvd.pos.y = 1;
+            j->dvd.color = corSorteada;
         }
     }
 }
@@ -126,9 +138,9 @@ void DesenhaJogo(Jogo* j) {
         j->tela[LARGURA_TELA-1][y]=(Pixel) {'#', LIGHTGRAY};
     }
 
-    j->tela[j->dvd.pos.x][j->dvd.pos.y]=(Pixel) {'D', LIGHTBLUE};
-    j->tela[j->dvd.pos.x + 1][j->dvd.pos.y]=(Pixel) {'V', LIGHTBLUE};
-    j->tela[j->dvd.pos.x + 2][j->dvd.pos.y]=(Pixel) {'D', LIGHTBLUE};
+    j->tela[j->dvd.pos.x][j->dvd.pos.y]=(Pixel) {'D', j->dvd.color};
+    j->tela[j->dvd.pos.x + 1][j->dvd.pos.y]=(Pixel) {'V', j->dvd.color};
+    j->tela[j->dvd.pos.x + 2][j->dvd.pos.y]=(Pixel) {'D', j->dvd.color};
 
      for(x=0; x < LARGURA_TELA; x++) {
         for(y=0; y < ALTURA_TELA; y++) {
