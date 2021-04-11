@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <conio2.h>
+#include <windows.h>
 
 #define LARGURA_TELA 80
 #define ALTURA_TELA 30
@@ -38,18 +39,18 @@ Jogo InicializaJogo();
 void AtualizaJogo(Jogo* j, float deltaT);
 void DesenhaJogo(Jogo* j);
 float CalculaDeltaT();
-
+void HideCursor();
 
 int main() {
     srand(time(NULL));
     Jogo j = InicializaJogo();
+    HideCursor();
 
     while (1) {
         AtualizaJogo(&j, CalculaDeltaT());
         DesenhaJogo(&j);
     }
 }
-
 
 float tempoAnterior = 0;
 float CalculaDeltaT() {
@@ -151,5 +152,12 @@ void DesenhaJogo(Jogo* j) {
             j->tela_anterior[x][y]=j->tela[x][y];
         }
     }
+}
 
+void HideCursor() {
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info;
+    info.dwSize = 100;
+    info.bVisible = FALSE;
+    SetConsoleCursorInfo(consoleHandle, &info);
 }
